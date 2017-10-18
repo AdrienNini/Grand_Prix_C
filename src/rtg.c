@@ -5,7 +5,7 @@
 
 
 int randTime;
-int[] randPool;
+int randPool[20][5];
 
 int main (int argc, char *argv[]) {
 
@@ -14,11 +14,14 @@ int main (int argc, char *argv[]) {
 	for (a = 0; a < 20; a++){
 		for (b = 0; b < 5; b++){
 			randTime = rand() % 30;
-			printf("%d\n", randTime);
+			randPool[a][b] = randTime;
 		}
 	}
 
+	printf("%d\n", randPool[rand() % 20][rand() % 5]);
+
 
 	return 1;
+ 
 
 }
