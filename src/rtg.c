@@ -18,7 +18,7 @@ int size = sizeof(int);
 
 
 // VARIABLES
-int randSeed = 1;
+unsigned int randSeed = 1;
 
 
 int main (int argc, char *argv[]) {
@@ -29,24 +29,21 @@ int main (int argc, char *argv[]) {
 	
 
 	// CHECK IF SOMETHING IS IN MEMORY
-	if (*shmaddr != -1) {
-		printf("%d\n", *shmaddr);
+	if (*shmaddr != 0) {
 		randSeed = *shmaddr;
 	} else {
-		printf("Nothing in Memory\n");
+		//printf("Nothing in Memory\n");
 	}
 
-
-	srand((unsigned)time(NULL) * randSeed);
-	int a, b;
-	for (a = 0; a < 20; a++) {
-		randTime = rand() % 35;
-		randPool[a] = randTime;
-		printf("%d\n", randTime);
-	}
-
+	// GENERATE RANDOM NUMBER
+	srand((unsigned)time(NULL) * randSeed );
 	
-	//printf("%d\n", randPool[rand() % 20];
+	randTime = rand() % 35;
+	
+	// WRITE NEW RANDSEED ON MEMORY
+	*shmaddr = hash(randTime);
+	
+	printf("%d\n", randTime);
 
 
 	return 0;
@@ -57,7 +54,7 @@ int initSH() {
 		perror("shmget: shmget failed"); 
 		exit(1);
 	} else {
-		printf("shmget: shmget succeded !\n");
+		//printf("shmget: shmget succeded !\n");
 		return 0;
 	}
 }
@@ -67,8 +64,14 @@ int attachSH(int id) {
 		perror("shmat: shmat failed");
 		exit(1);
 	} else {
-		printf("shmat: shmat succeded !\n");
+		//printf("shmat: shmat succeded !\n");
 		return 0;
 	}
 }
 
+int hash (int d){
+	int pid = getpid(), result;
+	result = d^pid;
+	result = result * 891997;
+	return abs(result);
+}
