@@ -13,12 +13,12 @@ int randPool[20];
 // SHARED MEMORY VARs
 key_t key = 5678;
 int shmid;
-char *shmaddr, *s;
+char *shmaddr;
 int size = sizeof(int);
 
 
 // VARIABLES
-int randSeed;
+int randSeed = 1;
 
 
 int main (int argc, char *argv[]) {
@@ -26,16 +26,18 @@ int main (int argc, char *argv[]) {
 	// CREATE A SHARED MEMORY
 	initSH();	
 	attachSH(shmid);
-
-	// WRITE SOMETHING IN MEMORY
-	s = shmaddr;
-	*s = 5;	
-
-	// READ SOMETHING FROM SHARED MEMORY
-	printf("%d\n", *shmaddr);
 	
 
-	srand((unsigned)time(NULL));
+	// CHECK IF SOMETHING IS IN MEMORY
+	if (*shmaddr != -1) {
+		printf("%d\n", *shmaddr);
+		randSeed = *shmaddr;
+	} else {
+		printf("Nothing in Memory\n");
+	}
+
+
+	srand((unsigned)time(NULL) * randSeed);
 	int a, b;
 	for (a = 0; a < 20; a++) {
 		randTime = rand() % 35;
@@ -70,6 +72,3 @@ int attachSH(int id) {
 	}
 }
 
-int writeSH(int data) {
-		
-}
