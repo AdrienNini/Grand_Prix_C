@@ -1,4 +1,9 @@
 #include <stdio.h>
+#include <unistd.h>
+#include <time.h>
+#include <stdlib.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 
 struct car {
 	int id;
@@ -60,6 +65,7 @@ int main (int argc, char *argv[]) {
 		}
 
 		if (isPit() && !crashed) {
+			Car.pitFlag = true;
 			pitTime = getTime();
 		}
 
@@ -84,12 +90,18 @@ bool checkBestSectorTime(int sector) {
 
 void calcLap() {
 	// Calc the total lap time
-	// Check the Best Lap time 
-	// Write the Best Lap time to SHM
+	int totalLap = 0, i;
+	for (i = 0; i < sizeof(Car.sectorsTime)/sizeof(int); i++) {
+		totalLcap += Car.sectorTime[i];
+	}
+	
 }
 
 void writeLapTime() {
 	// Write the lap time in the Shared Memory
+	if (*shmaddr.lapTime < Car.lapTime) {
+		*shmadd.lapTime = Car.lapTime;
+	}
 }
 
 int getTime() {
@@ -114,8 +126,14 @@ bool mountSHM() {
 
 bool isCrashed() {
 	// decide randomly if car is crashed
+	// 5% chance of crash
+	//srand(time(NULL));
+	
+	return false;	
 }
 	
 bool isPit() {
 	// decide randomly is car go to pit
+	// 20% change of pit stop
+	return !Car.pitFlag;
 }
