@@ -4,16 +4,7 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-
-struct car {
-	int id;
-	bool pitFlag;
-	bool  crashed;
-	int[3] sectorsTime;
-	int lapTime;
-	int pitTime;
-	int raceTime;
-};
+#include <utils.h>
 
 // Shared Memory Variables
 
@@ -108,21 +99,6 @@ int getTime() {
 	// Call the time generator function
 }
 
-bool mountSHM() {
-	// Init Shared Memory
-	if ((shmid = shmget(key, size, IPC_CREAT|0660)) == -1) {
-		perror("shmget: shmget failed");
-		return false;
-	} else {
-		// Attach SHM
-		if ((shmaddr = shmat(shmid, NULL, 0)) == (char *) -1) {
-			perror("shmat: shmat failed");
-			return false;
-		} else {
-			return true;
-		}
-	}	
-}
 
 bool isCrashed() {
 	// decide randomly if car is crashed
