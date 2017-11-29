@@ -34,12 +34,18 @@ int main (int argc, char *argv[]) {
 	Car.outFlag = false;
 	
 	// Find position in SHM
-	int i;
+	//
+	
+	memPos = argv[1];
+
+	// Init SHM in the Parent Process
+	/* int i;
 	for (i = 0; i < size; i++) {
 		if (*shmaddr[i].id == Car.id) {
 			memPos = i;
 		}
 	}
+	*/
 
 	// Race simulation
 	while (!raceIsOver && !crashed) { // Loop while !raceisOver
@@ -97,7 +103,7 @@ bool mountSHM() {
 		return false;
 	} else {
 		// Attach SHM
-		if ((shmaddr = shmat(id, NULL, 0)) == (char *) -1) {
+		if ((shmaddr = shmat(shmid, NULL, 0)) == (char *) -1) {
 			perror("shmat: shmat failed");
 			return false;
 		} else {
