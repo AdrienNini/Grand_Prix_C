@@ -8,6 +8,7 @@
 
 
 int memPos;
+struct car Car = {};
 
 int main (int argc, char *argv[]) {
 	
@@ -23,7 +24,6 @@ int main (int argc, char *argv[]) {
 	
 
 	// Init Car	
-	struct car Car;
 	Car.crashed = -1;
 	
 
@@ -37,23 +37,23 @@ int main (int argc, char *argv[]) {
 	*/
 
 	// Race simulation
-	while (!raceIsOver && !crashed) { // Loop while !raceisOver
+	while (!raceIsOver && !Car.crashed) { // Loop while !raceisOver
 		int i;
-		for (i = 0; i < sizeof(sectorsTime)/sizeof(int) && !crashed; i++) {		
+		for (i = 0; i < sizeof(Car.sectorsTime)/sizeof(int) && !Car.crashed; i++) {		
 
-			if (!(crashed = isCrashed())) { // isCrashed ?
+			if (!(Car.crashed = isCrashed())) { // isCrashed ?
 				Car.sectorsTime[i] = getTime(); // Generate sector time
 				writeSectorTime(i); 
 			}
 			
 		}
 
-		if (isPit() && !crashed) {
+		if (isPit() && !Car.crashed) {
 			Car.pitFlag = 1;
 			pitTime = getTime();
 		}
 
-		if (!crashed) {
+		if (!Car.crashed) {
 			calcLap();
 		}
 	} 	
