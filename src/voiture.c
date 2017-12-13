@@ -4,14 +4,8 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include <utils.h>
+#include "utils.h"
 
-// Shared Memory Variables
-
-key_t key = 5678;
-int shmid;
-char *shmaddr;
-int size = sizeof(struct car * 20);
 
 int memPos;
 
@@ -23,16 +17,15 @@ int main (int argc, char *argv[]) {
 		return 1;		
 	}
 	
+	// Find position in SHM
+	
+	memPos = parseInt(argv[1]);
+	
 
 	// Init Car	
 	struct car Car;
-	Car.id = (int) argv[1]; // id from params
-	Car.outFlag = false;
+	Car.crashed = -1;
 	
-	// Find position in SHM
-	//
-	
-	memPos = argv[1];
 
 	// Init SHM in the Parent Process
 	/* int i;
@@ -90,8 +83,8 @@ void calcLap() {
 
 void writeLapTime() {
 	// Write the lap time in the Shared Memory
-	if (*shmaddr.lapTime < Car.lapTime) {
-		*shmadd.lapTime = Car.lapTime;
+	if (*shmaddr[memPos].lapTime < Car.lapTime) {
+		*shmadd[memPos].lapTime = Car.lapTime;
 	}
 }
 
