@@ -49,7 +49,7 @@ int main (int argc, char *argv[]) {
 		}
 
 		if (isPit() && !crashed) {
-			Car.pitFlag = true;
+			Car.pitFlag = 1;
 			pitTime = getTime();
 		}
 
@@ -67,7 +67,7 @@ void writeSectorTime(int sector) {
 	}
 }
 
-bool checkBestSectorTime(int sector) {
+int checkBestSectorTime(int sector) {
 	// Check if the new sector time is better than the last best one (general)
 	return *shmaddr[memPos].sectorsTime[sector] < Car.sectorsTime[sector];
 }
@@ -93,15 +93,15 @@ int getTime() {
 }
 
 
-bool isCrashed() {
+int isCrashed() {
 	// decide randomly if car is crashed
 	// 5% chance of crash
 	//srand(time(NULL));
 	
-	return false;	
+	return -1;	
 }
 	
-bool isPit() {
+int isPit() {
 	// decide randomly is car go to pit
 	// 20% change of pit stop
 	return !Car.pitFlag;

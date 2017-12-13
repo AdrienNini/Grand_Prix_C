@@ -10,7 +10,7 @@ struct car {
 
 // SHARED MEMORY
 
-key_t key = 5678;
+key_t key = 6789;
 int shmid;
 char *shmaddr;
 int size = sizeof(struct car) * 20;
