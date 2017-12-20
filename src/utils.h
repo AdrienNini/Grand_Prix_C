@@ -12,18 +12,22 @@ struct car {
 
 key_t key = 6789;
 int shmid;
-char *shmaddr;
+struct car *shmCar;
 int size = sizeof(struct car) * 20;
 
 int mountSHM() {
+
+	printf("1");
+
         // Init Shared Memory
         if ((shmid = shmget(key, size, IPC_CREAT|0660)) == -1) {
-                perror("shmget: shmget failed");
+                printf("shmget: shmget failed");
                 return -1;
         } else {
+		printf("2");
                 // Attach SHM
-                if ((shmaddr = shmat(shmid, NULL, 0)) == (char *) -1) {
-                        perror("shmat: shmat failed");
+                if ((shmCar = (struct car*) shmat(shmid, NULL, 0)) == (struct car*)  -1) {
+                        printf"shmat: shmat failed");
                         return -1;
                 } else {
                         return 0;

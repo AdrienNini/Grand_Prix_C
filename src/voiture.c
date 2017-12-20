@@ -5,10 +5,10 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include "utils.h"
-
+#include "rtg.h"
 
 int memPos;
-struct car Car = {};
+struct car Car;
 int raceIsOver = 0;
 
 
@@ -22,11 +22,11 @@ int main (int argc, char *argv[]) {
 	
 	// Find position in SHM
 	
-	memPos = parseInt(argv[1]);
+	memPos = atoi(argv[1]);
 	
 
 	// Init Car	
-	Car.crashed = -1;
+	Car = shmCar[memPos];
 	
 
 	// Init SHM in the Parent Process
@@ -44,7 +44,7 @@ int main (int argc, char *argv[]) {
 		for (i = 0; i < sizeof(Car.sectorsTime)/sizeof(int) && !Car.crashed; i++) {		
 
 			if (!(Car.crashed = isCrashed())) { // isCrashed ?
-				Car.sectorsTime[i] = getTime(); // Generate sector time
+				Car.sectorsTime[i] = getTime(25, 35); // Generate sector time
 				writeSectorTime(i); 
 			}
 			
@@ -52,7 +52,7 @@ int main (int argc, char *argv[]) {
 
 		if (isPit() && !Car.crashed) {
 			Car.pitFlag = 1;
-			Car.pitTime = getTime();
+			Car.pitTime = getTime(5, 10);
 		}
 
 		if (!Car.crashed) {
@@ -65,13 +65,13 @@ int main (int argc, char *argv[]) {
 void writeSectorTime(int sector) {
 	// Write the best sector time in the Shared Memory
 	if (checkBestSectorTime(sector)) {
-		*shmaddr[memPos].sectorsTime[sector] = Car.sectorsTime[sector];
+		shmCar[memPos].sectorsTime[sector] = Car.sectorsTime[sector];
 	}
 }
 
 int checkBestSectorTime(int sector) {
 	// Check if the new sector time is better than the last best one (general)
-	return *shmaddr[memPos].sectorsTime[sector] < Car.sectorsTime[sector];
+	return shmCar[memPos].sectorsTime[sector] < Car.sectorsTime[sector];
 }
 
 void calcLap() {
@@ -85,13 +85,14 @@ void calcLap() {
 
 void writeLapTime() {
 	// Write the lap time in the Shared Memory
-	if (*shmaddr[memPos].lapTime < Car.lapTime) {
-		*shmaddr[memPos].lapTime = Car.lapTime;
+	if (shmCar[memPos].lapTime < Car.lapTime) {
+		shmCar[memPos].lapTime = Car.lapTime;
 	}
 }
 
-int getTime() {
+int getTime(int min, int max) {
 	// Call the time generator function
+	return randomRtg(min, max);
 }
 
 
