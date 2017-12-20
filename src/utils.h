@@ -12,7 +12,7 @@ struct car {
 
 key_t key = 6789;
 int shmid;
-char *shmaddr;
+struct car *shmCar;
 int size = sizeof(struct car) * 20;
 
 int mountSHM() {
@@ -22,7 +22,7 @@ int mountSHM() {
                 return -1;
         } else {
                 // Attach SHM
-                if ((shmaddr = shmat(shmid, NULL, 0)) == (char *) -1) {
+                if ((shmCar = shmat(shmid, NULL, 0)) == -1) {
                         perror("shmat: shmat failed");
                         return -1;
                 } else {
