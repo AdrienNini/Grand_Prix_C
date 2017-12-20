@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -15,19 +16,28 @@ int main (int argc, char* argv[]){
 	if(mountSHM() == -1){
 		perror("Error init share memory in race");
 		return -1;
+	} else {
+		printf("Shared Memory mounted !\n");
 	}
 	//init the sharmemory
 	for(i = 0; i < 20; i++){
 		shmCar[i].id = numsVoit[i];
 	}
-	//creat the cars
+	//creat the carsi
+	i = 0;
 	for(i = 0; i < 20; i++){
 		if((pidF = fork()) == -1){
 			perror("Error fork");
 			return -1;
 		}
-		if(pidF != 0){
-			if(execv("../bin/voiture",(char) i) == -1){
+		if(pidF == 0){
+			char* filePath = "../bin/voiture";
+			char buffInt[4];
+			sprintf(buffInt, "%d", i);
+			char* args[] = {filePath, buffInt, NULL};
+			
+			if(execv(filePath, args) == -1){
+				printf("%d", i);
 				perror("Error exec car");
 				return -1;
 			}
