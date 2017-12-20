@@ -9,6 +9,8 @@
 
 int memPos;
 struct car Car = {};
+int raceIsOver = 0;
+
 
 int main (int argc, char *argv[]) {
 	
@@ -50,7 +52,7 @@ int main (int argc, char *argv[]) {
 
 		if (isPit() && !Car.crashed) {
 			Car.pitFlag = 1;
-			pitTime = getTime();
+			Car.pitTime = getTime();
 		}
 
 		if (!Car.crashed) {
@@ -76,7 +78,7 @@ void calcLap() {
 	// Calc the total lap time
 	int totalLap = 0, i;
 	for (i = 0; i < sizeof(Car.sectorsTime)/sizeof(int); i++) {
-		totalLcap += Car.sectorTime[i];
+		totalLap += Car.sectorsTime[i];
 	}
 	
 }
@@ -84,7 +86,7 @@ void calcLap() {
 void writeLapTime() {
 	// Write the lap time in the Shared Memory
 	if (*shmaddr[memPos].lapTime < Car.lapTime) {
-		*shmadd[memPos].lapTime = Car.lapTime;
+		*shmaddr[memPos].lapTime = Car.lapTime;
 	}
 }
 
