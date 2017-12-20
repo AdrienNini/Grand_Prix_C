@@ -17,17 +17,15 @@ int size = sizeof(struct car) * 20;
 
 int mountSHM() {
 
-	printf("1");
 
         // Init Shared Memory
         if ((shmid = shmget(key, size, IPC_CREAT|0660)) == -1) {
-                printf("shmget: shmget failed");
+                perror("shmget: shmget failed");
                 return -1;
         } else {
-		printf("2");
                 // Attach SHM
                 if ((shmCar = (struct car*) shmat(shmid, NULL, 0)) == (struct car*)  -1) {
-                        printf"shmat: shmat failed");
+                        perror("shmat: shmat failed");
                         return -1;
                 } else {
                         return 0;

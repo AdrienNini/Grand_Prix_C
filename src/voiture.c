@@ -15,7 +15,7 @@ int raceIsOver = 0;
 int main (int argc, char *argv[]) {
 	
 	// Create and mount the shared memory
-	if (!mountSHM()){
+	if (mountSHM() == -1){
 		printf("Creation or Mounting of SHM failed");
 		return 1;		
 	}
