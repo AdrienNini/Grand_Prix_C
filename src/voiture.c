@@ -14,7 +14,7 @@ int raceIsOver = 0;
 
 int main (int argc, char *argv[]) {
 	
-	printf("Bonjour je suis la voiture %s \n", argv[1]);
+	//printf("Bonjour je suis la voiture %s \n", argv[1]);
 	
 	// Create and mount the shared memory
 	if (mountSHM() == -1){
@@ -31,22 +31,19 @@ int main (int argc, char *argv[]) {
 	Car = shmCar[memPos];
 	
 
-	// Init SHM in the Parent Process
-	/* int i;
-	for (i = 0; i < size; i++) {
-		if (*shmaddr[i].id == Car.id) {
-			memPos = i;
-		}
-	}
-	*/
-
 	// Race simulation
+	int j = 0;
 	while (!raceIsOver && !Car.crashed) { // Loop while !raceisOver
+		
+
 		int i;
 		for (i = 0; i < sizeof(Car.sectorsTime)/sizeof(int) && !Car.crashed; i++) {		
+			
+			//printf("Loop \n");			
 
-			if (!(Car.crashed = isCrashed())) { // isCrashed ?
+			if (!Car.crashed) { // isCrashed ?
 				Car.sectorsTime[i] = getTime(25, 35); // Generate sector time
+			//	printf("Time generated for car n°: %d\n", Car.id);
 				writeSectorTime(i); 
 			}
 			
@@ -60,6 +57,9 @@ int main (int argc, char *argv[]) {
 		if (!Car.crashed) {
 			calcLap();
 		}
+
+
+		if (i > 30) { raceIsOver = 1; }
 	} 	
 }
 
@@ -103,7 +103,7 @@ int isCrashed() {
 	// 5% chance of crash
 	//srand(time(NULL));
 	
-	return -1;	
+	return 0;	
 }
 	
 int isPit() {

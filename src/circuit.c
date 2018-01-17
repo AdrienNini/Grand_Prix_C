@@ -22,7 +22,9 @@ int main (int argc, char* argv[]){
 	//init the sharmemory
 	for(i = 0; i < 20; i++){
 		shmCar[i].id = numsVoit[i];
+		shmCar[i].crashed = 0;
 	}
+
 	//creat the carsi
 	i = 0;
 	for(i = 0; i < 20; i++){
@@ -31,6 +33,11 @@ int main (int argc, char* argv[]){
 			return -1;
 		}
 		if(pidF == 0){
+
+			printf("Car %d: time for sector 1 : %d", shmCar[i].id, shmCar[i].sectorsTime[0]);
+
+		} else {
+		
 			char* filePath = "../bin/voiture";
 			char buffInt[4];
 			sprintf(buffInt, "%d", i);
@@ -41,8 +48,12 @@ int main (int argc, char* argv[]){
 				perror("Error exec car");
 				return -1;
 			}
+
 		}
 		
 	}
+
+
+	return 0;
 	
 } 
