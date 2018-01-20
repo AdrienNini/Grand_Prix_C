@@ -28,6 +28,8 @@ int main (int argc, char *argv[]) {
 	if (mountSHM() == -1){
 		printf("Creation or Mounting of SHM failed");
 		return 1;		
+	} else {
+		printf("SHM mounted in car, Id: %d\n", shmid);	
 	}
 	
 	// Find position in SHM
@@ -41,7 +43,7 @@ int main (int argc, char *argv[]) {
 
 	// Race simulation
 	int j = 0;
-	for (j = 0; j < 30; j++)  { // Loop while !raceisOver
+	for (j = 0; j < 1; j++)  { // Loop while !raceisOver
 		
 
 		int i;
@@ -72,10 +74,17 @@ int main (int argc, char *argv[]) {
 
 
 void writeSectorTime(int sector) {
+
+	printf("Sector time (local) : %d\n", Car.sectorsTime[0]);
+
 	// Write the best sector time in the Shared Memory
 	if (checkBestSectorTime(sector)) {
 		shmCar[memPos].sectorsTime[sector] = Car.sectorsTime[sector];
+		printf("Sector time (Shared Memory) : %d\n", shmCar[memPos].sectorsTime[0]);
+
 	}
+
+	
 }
 
 int checkBestSectorTime(int sector) {
