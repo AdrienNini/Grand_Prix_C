@@ -15,15 +15,12 @@ int main (int argc, char* argv[]){
 	int i;
 	int pidF;
 	int numsVoit[20] = {44,77,3,33,5,7,31,11,31,19,18,14,2,10,55,8,20,27,30,9};
-	
-	Cars = malloc(20*sizeof(struct car));
-
 	// mount the share memory
 	if(mountSHM() == -1){
 		perror("Error init share memory in race");
 		return 1;
 	} else {
-		printf("Shared Memory mounted !\nId : %d\n", shmid);
+		printf("Shared Memory mounted !\n");
 	}
 	//init the sharmemory
 	for(i = 0; i < 20; i++){
@@ -42,8 +39,9 @@ int main (int argc, char* argv[]){
 		}
 		if(pidF == 0) {
 			
+			sleep(2);
 			readSHM();
-			printf("Car %d \nTime for sector 1: %d\n", shmCar[i].id, shmCar[i].sectorsTime[0]);
+			printf("Car %d \n\tTime for sector 1: %d", Cars[i].id, Cars[i].sectorsTime[0]);
 	
 		
 		 } else  {
