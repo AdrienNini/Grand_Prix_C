@@ -3,10 +3,13 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/shm.h>
+#include <string.h>
 #include "utils.h"
 
 
-
+struct car *Cars;
+void readSHM(void);
+void writeSHM(void);
 
 int main (int argc, char* argv[]){
 	int i;
@@ -15,28 +18,33 @@ int main (int argc, char* argv[]){
 	// mount the share memory
 	if(mountSHM() == -1){
 		perror("Error init share memory in race");
-		return -1;
+		return 1;
 	} else {
 		printf("Shared Memory mounted !\n");
 	}
 	//init the sharmemory
 	for(i = 0; i < 20; i++){
-		shmCar[i].id = numsVoit[i];
-		shmCar[i].crashed = 0;
+		Cars[i].id = numsVoit[i];
+		Cars[i].crashed = 0;
 	}
+	writeSHM();
 
-	//creat the carsi
+	//create the cars
 	i = 0;
-	for(i = 0; i < 20; i++){
+	for(i = 0; i < 1; i++){
 		if((pidF = fork()) == -1){
 			perror("Error fork");
+			abort();
 			return -1;
 		}
-		if(pidF == 0){
-
-			printf("Car %d: time for sector 1 : %d", shmCar[i].id, shmCar[i].sectorsTime[0]);
-
-		} else {
+		if(pidF == 0) {
+			
+			sleep(2);
+			readSHM();
+			printf("Car %d \n\tTime for sector 1: %d", Cars[i].id, Cars[i].sectorsTime[0]);
+	
+		
+		 } else  {
 		
 			char* filePath = "../bin/voiture";
 			char buffInt[4];
@@ -53,7 +61,15 @@ int main (int argc, char* argv[]){
 		
 	}
 
-
+	dismountSHM();
 	return 0;
 	
 } 
+
+void readSHM() {
+	memcpy(Cars, shmCar, sizeof(struct car)*20);	
+}
+
+void writeSHM(){
+	shmCar = Cars;
+}

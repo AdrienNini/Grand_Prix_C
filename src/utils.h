@@ -1,7 +1,7 @@
 struct car {
          int id;
          int pitFlag;
-         int  crashed;
+         int crashed;
          int sectorsTime[3];
          int lapTime;
          int pitTime;
@@ -31,4 +31,9 @@ int mountSHM() {
                         return 0;
                 }
         }
+}
+
+int dismountSHM(){
+	shmdt(shmCar);
+	shmctl(shmid, IPC_RMID, NULL); 
 }

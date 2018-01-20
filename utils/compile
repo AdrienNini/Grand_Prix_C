@@ -10,7 +10,7 @@ elif [ -f "$1"  ] #Check if argument is a file
 then
 	s=$1
 	s2=${s::-2} #Removes the file extension
-	gcc $s -o $path$s2
+	gcc $s -g -o $path$s2
 else
 	echo "$1 is not a file"
 fi

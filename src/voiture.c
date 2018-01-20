@@ -9,7 +9,15 @@
 
 int memPos;
 struct car Car;
-int raceIsOver = 0;
+
+
+void writeSectorTime(int sector);
+int checkBestSectorTime(int sector);
+void calcLap(void);
+void writeLapTime(void);
+int getTime(int min, int max);
+int isCrashed(void);
+int isPit(void);
 
 
 int main (int argc, char *argv[]) {
@@ -33,7 +41,7 @@ int main (int argc, char *argv[]) {
 
 	// Race simulation
 	int j = 0;
-	while (!raceIsOver && !Car.crashed) { // Loop while !raceisOver
+	for (j = 0; j < 30; j++)  { // Loop while !raceisOver
 		
 
 		int i;
@@ -42,25 +50,24 @@ int main (int argc, char *argv[]) {
 			//printf("Loop \n");			
 
 			if (!Car.crashed) { // isCrashed ?
-				Car.sectorsTime[i] = getTime(25, 35); // Generate sector time
+				Car.sectorsTime[i] = getTime(25000, 35000); // Generate sector time
 			//	printf("Time generated for car n°: %d\n", Car.id);
-				writeSectorTime(i); 
+			//	writeSectorTime(i); 
 			}
-			
 		}
+		writeSectorTime(0);
 
-		if (isPit() && !Car.crashed) {
-			Car.pitFlag = 1;
-			Car.pitTime = getTime(5, 10);
-		}
+		//if (isPit() && !Car.crashed) {
+		//	Car.pitFlag = 1;
+		//	Car.pitTime = getTime(5, 10);
+		//}
 
-		if (!Car.crashed) {
-			calcLap();
-		}
+		//if (!Car.crashed) {
+		//	calcLap();
+		//}
 
 
-		if (i > 30) { raceIsOver = 1; }
-	} 	
+	}
 }
 
 
