@@ -80,7 +80,7 @@ void writeSectorTime(int sector) {
 
 int checkBestSectorTime(int sector) {
 	// Check if the new sector time is better than the last best one (general)
-	return shmCar[memPos].sectorsTime[sector] > Car.sectorsTime[sector];
+	return shmCar[memPos].sectorsTime[sector] < Car.sectorsTime[sector];
 }
 
 void calcLap() {
@@ -94,7 +94,7 @@ void calcLap() {
 
 void writeLapTime() {
 	// Write the lap time in the Shared Memory
-	if (shmCar[memPos].lapTime > Car.lapTime) {
+	if (shmCar[memPos].lapTime < Car.lapTime) {
 		shmCar[memPos].lapTime = Car.lapTime;
 	}
 }
