@@ -1,12 +1,11 @@
 struct car {
-	int id;
-	int pitFlag;
-	int crashed;
-	int sectorsTime[3];
-	int lapTime;
-	int pitTime;
-	int raceTime;
-	int finished; 
+         int id;
+         int pitFlag;
+         int crashed;
+         int sectorsTime[3];
+         int lapTime;
+         int pitTime;
+         int raceTime;
 };
 
 // SHARED MEMORY

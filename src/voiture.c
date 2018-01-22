@@ -22,14 +22,12 @@ int isPit(void);
 
 int main (int argc, char *argv[]) {
 	
+	//printf("Bonjour je suis la voiture %s \n", argv[1]);
 	
 	// Create and mount the shared memory
-	// N'affiche pas d'erreurs à la création et au montage de la shared memory
 	if (mountSHM() == -1){
 		printf("Creation or Mounting of SHM failed");
 		return 1;		
-	} else {
-		printf("<voiture>\tshmid = %d\n", shmid); // Affiche le shmid récupéré par le processus voiture
 	}
 	
 	// Find position in SHM
@@ -37,60 +35,46 @@ int main (int argc, char *argv[]) {
 	memPos = atoi(argv[1]);
 	
 
-	// Init Car
-	// Problèmes:
-	// 	Ne récupère pas le numéro de la voiture, précédemment écrit par le circuit
+	// Init Car	
 	Car = shmCar[memPos];
 	
 
 	// Race simulation
-	int j;
-	for (j = 0; j < 30; j++)  {
+	int j = 0;
+	for (j = 0; j < 30; j++)  { // Loop while !raceisOver
 		
 
 		int i;
 		for (i = 0; i < sizeof(Car.sectorsTime)/sizeof(int) && !Car.crashed; i++) {		
 			
+			//printf("Loop \n");			
 
 			if (!Car.crashed) { // isCrashed ?
 				Car.sectorsTime[i] = getTime(25000, 35000); // Generate sector time
-				writeSectorTime(i); 
-			} else {
-				printf("<voiture %d>\tCar crashed !\n", memPos);
+			//	printf("Time generated for car n°: %d\n", Car.id);
+			//	writeSectorTime(i); 
 			}
 		}
+		writeSectorTime(0);
 
-		sleep(1);
+		//if (isPit() && !Car.crashed) {
+		//	Car.pitFlag = 1;
+		//	Car.pitTime = getTime(5, 10);
+		//}
 
-		if (isPit() && !Car.crashed) {
-			printf("<voiture %d>\tCar stopped at pit\n", memPos);
-			Car.pitFlag = 1;
-			Car.pitTime = getTime(5, 10);
-		}
-
-		if (!Car.crashed) {
-			calcLap();
-			writeLapTime();
-		}
+		//if (!Car.crashed) {
+		//	calcLap();
+		//}
 
 
 	}
-
-	Car.finished = 1;
-	shmCar[memPos].finished = Car.finished;	
-
 }
 
 
 void writeSectorTime(int sector) {
 	// Write the best sector time in the Shared Memory
-	
-	// Test : Vérifie que la lecture et l'écrite dans la Shared Memory fonctionne
-	printf("<voiture %d>\tLocal data : %d\n", memPos, Car.sectorsTime[sector]); // Affiche les données de la structure car en locale
-
 	if (checkBestSectorTime(sector)) {
 		shmCar[memPos].sectorsTime[sector] = Car.sectorsTime[sector];
-		printf("<voiture %d>\tShared memory data : %d\n", memPos, shmCar[memPos].sectorsTime[sector]); // Affiche les données de la structure car en shared memory
 	}
 }
 
@@ -122,9 +106,15 @@ int getTime(int min, int max) {
 
 
 int isCrashed() {
-	return randomRtg(0, 1000) < 200 ? 1: 0;
+	// decide randomly if car is crashed
+	// 5% chance of crash
+	//srand(time(NULL));
+	
+	return 0;	
 }
 	
 int isPit() {
-	return randomRtg(0, 1000) < 200 ? 1: 0;
+	// decide randomly is car go to pit
+	// 20% change of pit stop
+	return !Car.pitFlag;
 }
