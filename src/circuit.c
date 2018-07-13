@@ -34,18 +34,18 @@ int main (int argc, char* argv[]){
 		}
 		if(pidF == 0){
 
-			printf("Car %d: time for sector 1 : %d", shmCar[i].id, shmCar[i].sectorsTime[0]);
+			printf("Car %d: time for sector 1 : %d \n", shmCar[i].id, shmCar[i].sectorsTime[0]);
 
 		} else {
 		
-			char* filePath = "../bin/voiture";
+			char* filePath = "voiture";
 			char buffInt[4];
 			sprintf(buffInt, "%d", i);
 			char* args[] = {filePath, buffInt, NULL};
 			
 			if(execv(filePath, args) == -1){
-				printf("%d", i);
-				perror("Error exec car");
+				printf(" => %d, ", i);
+				perror(" -> Error exec car");
 				return -1;
 			}
 
